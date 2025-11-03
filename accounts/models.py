@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
@@ -7,7 +9,7 @@ from django.utils import timezone
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def _create_user(self, phone: str, password: str | None, **extra_fields):
+    def _create_user(self, phone: str, password: Optional[str], **extra_fields):
         if not phone:
             raise ValueError("The phone number must be set")
         phone = self.normalize_email(phone) if "@" in phone else phone
@@ -16,12 +18,12 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_user(self, phone: str, password: str | None = None, **extra_fields):
+    def create_user(self, phone: str, password: Optional[str] = None, **extra_fields):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(phone, password, **extra_fields)
 
-    def create_superuser(self, phone: str, password: str | None, **extra_fields):
+    def create_superuser(self, phone: str, password: Optional[str], **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 

@@ -1,9 +1,9 @@
 import secrets
 import string
-from typing import Iterable
+from typing import Iterable, Optional
 
 
-def generate_room_code(length: int = 6, alphabet: Iterable[str] | None = None) -> str:
+def generate_room_code(length: int = 6, alphabet: Optional[Iterable[str]] = None) -> str:
     alphabet = alphabet or (string.ascii_uppercase + string.digits)
     return "".join(secrets.choice(list(alphabet)) for _ in range(length))
 
