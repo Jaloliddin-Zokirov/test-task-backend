@@ -84,8 +84,7 @@ class QuizCreateSerializer(serializers.ModelSerializer):
             quiz = Quiz.objects.create(created_by=user, **validated_data)
             for index, question_data in enumerate(questions_data):
                 choices = question_data.pop("choices", [])
-                order_value = question_data.pop("order", index)
-                question = Question.objects.create(quiz=quiz, order=order_value, **question_data)
+                question = Question.objects.create(quiz=quiz, **question_data)
                 choices_to_create = [Choice(question=question, **choice_data) for choice_data in choices]
                 Choice.objects.bulk_create(choices_to_create)
         quiz.refresh_from_db()
