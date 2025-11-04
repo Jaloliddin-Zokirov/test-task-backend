@@ -4,6 +4,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -139,6 +140,14 @@ class QuizByCodeView(APIView):
 class StudentJoinView(APIView):
     permission_classes = (permissions.AllowAny,)
 
+    @swagger_auto_schema(
+        operation_description="Join a quiz by providing room code and name",
+        request_body=StudentJoinSerializer,
+        responses={
+            201: "Student joined successfully",
+            400: "Bad request - invalid data",
+        },
+    )
     def post(self, request):
         serializer = StudentJoinSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
