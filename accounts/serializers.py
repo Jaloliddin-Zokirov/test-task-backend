@@ -14,13 +14,18 @@ class UserSerializer(serializers.ModelSerializer):
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=6)
+    name = serializers.CharField(write_only=True)
+    surname = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ("id", "phone", "full_name", "password", "email")
+        fields = ("id", "phone", "name", "surname", "password", "email")
         read_only_fields = ("id",)
 
     def create(self, validated_data):
+        name = validated_data.pop("name")
+        surname = validated_data.pop("surname")
+        validated_data["full_name"] = f"{name} {surname}"
         password = validated_data.pop("password")
         user = User.objects.create_user(password=password, **validated_data)
         return user
