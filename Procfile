@@ -1,1 +1,1 @@
-web: daphne project_name.asgi:application --port $PORT --bind 0.0.0.0
+web: daphne quiz_backend.asgi:application --port $PORT --bind 0.0.0.0
