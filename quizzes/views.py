@@ -19,6 +19,7 @@ from .serializers import (
     QuizResultsSerializer,
     StudentJoinSerializer,
     StudentResultSerializer,
+    StudentSerializer,
     SubmitAnswersSerializer,
     serialize_scoreboard,
 )
@@ -159,6 +160,7 @@ class StudentJoinView(APIView):
                 "name": student.name,
                 "joined_at": student.joined_at.isoformat(),
             },
+            "students": StudentSerializer(quiz.students.all(), many=True).data,
             "time_remaining": _time_remaining(quiz),
         }
         _broadcast(quiz.room_code, "student_joined", payload)
