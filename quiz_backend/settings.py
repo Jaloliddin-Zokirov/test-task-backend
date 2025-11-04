@@ -163,12 +163,8 @@ SWAGGER_SETTINGS = {
         }
     },
     "USE_SESSION_AUTH": False,
-    "SERVERS": [
-        {
-            "url": "https://test-task-backend-production-80c6.up.railway.app",
-            "description": "Production server",
-        }
-    ],
+    "HOST": "test-task-backend-production-80c6.up.railway.app",
+    "SCHEMES": ["https"],
 }
 
 CHANNEL_LAYERS = {
