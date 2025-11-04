@@ -163,8 +163,12 @@ SWAGGER_SETTINGS = {
         }
     },
     "USE_SESSION_AUTH": False,
-    "HOST": "test-task-backend-production-80c6.up.railway.app",
-    "SCHEMES": ["https"],
+    "SERVERS": [
+        {
+            "url": "https://test-task-backend-production-80c6.up.railway.app",
+            "description": "Production server",
+        }
+    ],
 }
 
 CHANNEL_LAYERS = {
@@ -183,6 +187,7 @@ if redis_url := os.getenv("REDIS_URL"):
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://test-task-backend-production-80c6.up.railway.app",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
