@@ -63,6 +63,8 @@ class QuizViewSet(viewsets.ModelViewSet):
         return Response(output.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return Quiz.objects.none()
         return Quiz.objects.filter(created_by=self.request.user)
 
     def get_serializer_class(self):
@@ -170,6 +172,14 @@ class StudentJoinView(APIView):
 class SubmitAnswersView(APIView):
     permission_classes = (permissions.AllowAny,)
 
+    @swagger_auto_schema(
+        operation_description="Submit answers for a student in a quiz",
+        request_body=SubmitAnswersSerializer,
+        responses={
+            200: "Answers submitted successfully",
+            400: "Bad request - invalid data or quiz not accepting answers",
+        },
+    )
     def post(self, request, room_code: str, student_id: int):
         quiz = get_object_or_404(Quiz, room_code=room_code.upper())
         if quiz.status != QuizStatus.RUNNING:
