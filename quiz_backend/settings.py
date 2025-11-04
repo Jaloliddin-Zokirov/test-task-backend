@@ -13,7 +13,12 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-secret-key-change-me")
 
 DEBUG = os.getenv("DJANGO_DEBUG", "false").lower() == "true"
 
-ALLOWED_HOSTS = [host.strip() for host in os.getenv("DJANGO_ALLOWED_HOSTS", "https://test-task-backend-production-80c6.up.railway.app,http://127.0.0.1:8000,http://localhost:3000").split(",") if host.strip()]
+ALLOWED_HOSTS = []
+for host in os.getenv("DJANGO_ALLOWED_HOSTS", "https://test-task-backend-production-80c6.up.railway.app,http://127.0.0.1:8000,http://localhost:3000").split(","):
+    host = host.strip()
+    if host:
+        parsed = urlparse(host)
+        ALLOWED_HOSTS.append(parsed.netloc)
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
     for origin in os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
