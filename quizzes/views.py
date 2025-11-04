@@ -223,6 +223,40 @@ class SubmitAnswersView(APIView):
         return Response(result_payload, status=status.HTTP_200_OK)
 
 
+class StudentResultsView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, room_code: str, student_id: int):
+        quiz = get_object_or_404(Quiz, room_code=room_code.upper())
+        if quiz.status != QuizStatus.FINISHED:
+            return Response({"detail": "Quiz is not finished yet"}, status=status.HTTP_400_BAD_REQUEST)
+        student = get_object_or_404(Student, pk=student_id, quiz=quiz)
+
+        scoreboard = build_scoreboard(quiz)
+        student_entry = next((entry for entry in scoreboard if entry["student_id"] == student.id), None)
+        if not student_entry:
+            return Response({"detail": "Student not found in scoreboard"}, status=status.HTTP_404_NOT_FOUND)
+
+        winner_entry = scoreboard[0] if scoreboard else None
+
+        data = {
+            "student": {
+                "name": student_entry["name"],
+                "score": student_entry["score"],
+                "total_questions": student_entry["total_questions"],
+                "percentage": calculate_percentage(student_entry["score"], student_entry["total_questions"]),
+                "rank": next((index + 1 for index, entry in enumerate(scoreboard) if entry["student_id"] == student.id), None),
+            },
+            "winner": {
+                "name": winner_entry["name"],
+                "score": winner_entry["score"],
+                "total_questions": winner_entry["total_questions"],
+                "percentage": calculate_percentage(winner_entry["score"], winner_entry["total_questions"]),
+            } if winner_entry else None,
+        }
+        return Response(data)
+
+
 class LeaderboardView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 

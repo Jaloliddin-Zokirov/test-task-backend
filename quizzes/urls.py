@@ -6,6 +6,7 @@ from .views import (
     QuizByCodeView,
     QuizViewSet,
     StudentJoinView,
+    StudentResultsView,
     SubmitAnswersView,
 )
 
@@ -20,6 +21,11 @@ urlpatterns = [
         "room/<str:room_code>/students/<int:student_id>/answers/",
         SubmitAnswersView.as_view(),
         name="submit-answers",
+    ),
+    path(
+        "room/<str:room_code>/students/<int:student_id>/results/",
+        StudentResultsView.as_view(),
+        name="student-results",
     ),
     path("", include(router.urls)),
 ]
