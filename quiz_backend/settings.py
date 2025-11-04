@@ -19,6 +19,8 @@ for host in os.getenv("DJANGO_ALLOWED_HOSTS", "https://test-task-backend-product
     if host:
         parsed = urlparse(host)
         ALLOWED_HOSTS.append(parsed.netloc)
+ALLOWED_HOSTS.append('127.0.0.1')
+ALLOWED_HOSTS.append('localhost')
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
     for origin in os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")

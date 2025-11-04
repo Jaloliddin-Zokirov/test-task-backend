@@ -57,6 +57,12 @@ class PhoneTokenObtainPairSerializer(TokenObtainPairSerializer):
         return data
 
 
+class LoginResponseSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+    access = serializers.CharField()
+    user = UserSerializer()
+
+
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
